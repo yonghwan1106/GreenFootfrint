@@ -1,6 +1,10 @@
 import os
 import streamlit as st
 
+
+# Streamlit Secrets에서 환경 변수로 API 키 설정
+os.environ['ANTHROPIC_API_KEY'] = st.secrets["ANTHROPIC_API_KEY"]
+
 # 페이지 설정
 st.set_page_config(page_title="개인 탄소 발자국 거래 시스템", layout="wide")
 
