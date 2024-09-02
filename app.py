@@ -3,10 +3,18 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 from datetime import datetime, timedelta
+# Anthropic API 키 설정 (환경 변수에서 가져오기)
+os.environ['ANTHROPIC_API_KEY'] = 'your-api-key-here'
+
 # 새로운 import 문 추가
-from ai_integration import get_ai_recommendation, analyze_carbon_trend
-from visualizations import (create_carbon_footprint_gauge, create_carbon_trend_chart,
-                            create_category_breakdown, create_reduction_potential_chart)
+try:
+    from ai_integration import get_ai_recommendation, analyze_carbon_trend
+    from visualizations import (create_carbon_footprint_gauge, create_carbon_trend_chart,
+                                create_category_breakdown, create_reduction_potential_chart)
+except ImportError as e:
+    st.error(f"필요한 모듈을 import 하는 데 실패했습니다: {e}")
+    st.error("ai_integration.py와 visualizations.py 파일이 올바른 위치에 있는지 확인해주세요.")
+    st.stop()
 
 # 페이지 설정
 st.set_page_config(page_title="개인 탄소 발자국 거래 시스템", layout="wide")
