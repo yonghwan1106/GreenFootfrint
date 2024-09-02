@@ -11,7 +11,6 @@ except Exception as e:
 ANTHROPIC_API_KEY = st.secrets["ANTHROPIC_API_KEY"]
 
 # 기타 설정
-DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 't')
 INITIAL_CARBON_CREDITS = 4.0
 MAX_VIRTUAL_TREES = 100
 
