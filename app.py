@@ -3,13 +3,16 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
-from anthropic import Anthropic
+import logging
+from anthropic import Anthropic, HUMAN_PROMPT, AI_PROMPT
 from config import ANTHROPIC_API_KEY, INITIAL_CARBON_CREDITS, AI_MODEL, MAX_TOKENS
 from datetime import datetime, timedelta
 from ai_integration import get_ai_recommendation, analyze_carbon_trend
 from visualizations import (create_carbon_footprint_gauge, create_carbon_trend_chart,
                             create_category_breakdown, create_reduction_potential_chart)
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Anthropic API 키 확인
 if not ANTHROPIC_API_KEY:
@@ -25,12 +28,22 @@ if 'carbon_credits' not in st.session_state:
 
 # AI 통합 사용 예
 def get_ai_recommendation(user_data):
-    response = anthropic.completions.create(
-        model="claude-3-sonnet-20240229",
-        prompt=f"사용자 데이터: {user_data}",
-        max_tokens_to_sample=300
-    )
-    return response.completion
+    logger.info(f"Attempting to get AI recommendation for user data: {user_data}")
+    client = Anthropic(api_key=ANTHROPIC_API_KEY)
+    prompt = f"{HUMAN_PROMPT} 다음은 사용자의 탄소 발자국 데이터입니다: {user_data}. 이 사용자에게 탄소 발자국을 줄일 수 있는 개인화된 조언을 제공해주세요. 구체적인 행동 지침과 그 효과를 설명해주세요.{AI_PROMPT}"
+
+    try:
+        response = client.completions.create(
+            model=AI_MODEL,
+            prompt=prompt,
+            max_tokens_to_sample=MAX_TOKENS,
+            temperature=0.7
+        )
+        logger.info("Successfully received AI recommendation")
+        return response.completion
+    except Exception as e:
+        logger.error(f"Error in getting AI recommendation: {str(e)}")
+        return None
 
 # 페이지 설정
 st.set_page_config(page_title="개인 탄소 발자국 거래 시스템", layout="wide")
@@ -83,13 +96,20 @@ def main():
             else:
                 st.error("탄소 크레딧이 부족합니다.")
         
-        # 새로운 기능: AI 추천
-        user_data = {"transport": "car", "energy_usage": "high", "diet": "meat-heavy"}
+        # AI 추천 받기
         if st.button("AI 추천 받기"):
-            recommendation = get_ai_recommendation(user_data)
-            st.write(recommendation)
+            user_data = {"transport": "car", "energy_usage": "high", "diet": "meat-heavy"}
+            try:
+                recommendation = get_ai_recommendation(user_data)
+                if recommendation:
+                    st.write(recommendation)
+                else:
+                    st.error("AI 추천을 가져오지 못했습니다. 로그를 확인해주세요.")
+            except Exception as e:
+                st.error(f"AI 추천 과정에서 오류가 발생했습니다: {str(e)}")
+                logger.exception("Detailed error in AI recommendation process")
         
-        # 새로운 기능: 카테고리별 분석
+        # 카테고리별 분석
         category_data = pd.DataFrame([
             {'category': '교통', 'subcategory': '자동차', 'value': 2.5},
             {'category': '교통', 'subcategory': '대중교통', 'value': 0.8},

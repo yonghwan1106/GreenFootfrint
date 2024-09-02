@@ -1,13 +1,13 @@
 import os
 from dotenv import load_dotenv
 
-# .env 파일 로드 시도
+# .env 파일 로드 시도 (로컬 개발 환경용)
 try:
     load_dotenv()
 except Exception as e:
-    print(f"Warning: Failed to load .env file. Error: {e}")
+    print(f"Warning: Failed to load .env file. This is normal in production. Error: {e}")
 
-# 환경 변수에서 API 키 가져오기
+# Streamlit Secrets 또는 환경 변수에서 API 키 가져오기
 ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY')
 
 # 기타 설정
