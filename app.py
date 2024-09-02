@@ -172,16 +172,6 @@ def main():
     fig = px.line(real_time_data, x='time', y='footprint', title='최근 1시간 탄소 발자국')
     st.sidebar.plotly_chart(fig, use_container_width=True)
 
-# Streamlit 앱에서 사용 예시
-if st.button("AI 추천 받기"):
-    user_data = {"transport": "car", "energy_usage": "high", "diet": "meat-heavy"}
-    recommendation = get_ai_recommendation(user_data)
-    st.write(recommendation)
 
-if st.button("탄소 발자국 트렌드 분석"):
-    carbon_data = [2.5, 2.3, 2.7, 2.4, 2.2]  # 최근 5일간의 가상 데이터
-    analysis = analyze_carbon_trend(carbon_data)
-    st.write(analysis)
-    
 if __name__ == "__main__":
     main()
