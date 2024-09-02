@@ -4,6 +4,10 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 from datetime import datetime, timedelta
+from ai_integration import get_ai_recommendation, analyze_carbon_trend
+from visualizations import (create_carbon_footprint_gauge, create_carbon_trend_chart,
+                            create_category_breakdown, create_reduction_potential_chart)
+
 
 # Anthropic API 키 설정 (환경 변수에서 가져오기)
 ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY')
@@ -11,15 +15,6 @@ if not ANTHROPIC_API_KEY:
     st.error("ANTHROPIC_API_KEY 환경 변수가 설정되지 않았습니다.")
     st.stop()
 
-# 새로운 import 문 추가
-try:
-    from ai_integration import get_ai_recommendation, analyze_carbon_trend
-    from visualizations import (create_carbon_footprint_gauge, create_carbon_trend_chart,
-                                create_category_breakdown, create_reduction_potential_chart)
-except ImportError as e:
-    st.error(f"필요한 모듈을 import 하는 데 실패했습니다: {e}")
-    st.error("ai_integration.py와 visualizations.py 파일이 올바른 위치에 있는지 확인해주세요.")
-    st.stop()
 
 # 페이지 설정
 st.set_page_config(page_title="개인 탄소 발자국 거래 시스템", layout="wide")
@@ -92,7 +87,7 @@ def main():
         # 새로운 기능: 절감 잠재량 분석
         create_reduction_potential_chart({})
         
-        # 새로운 기능: 탄소 발자국 트렜드 분석
+        # 새로운 기능: 탄소 발자국 트렌드 분석
         carbon_data = [2.5, 2.3, 2.7, 2.4, 2.2]  # 최근 5일간의 가상 데이터
         if st.button("탄소 발자국 트렌드 분석"):
             analysis = analyze_carbon_trend(carbon_data)
