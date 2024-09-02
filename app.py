@@ -3,6 +3,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
+from anthropic import Anthropic
+from config import ANTHROPIC_API_KEY, INITIAL_CARBON_CREDITS, AI_MODEL, MAX_TOKENS
 from datetime import datetime, timedelta
 from ai_integration import get_ai_recommendation, analyze_carbon_trend
 from visualizations import (create_carbon_footprint_gauge, create_carbon_trend_chart,
@@ -15,6 +17,21 @@ if not ANTHROPIC_API_KEY:
     st.error("ANTHROPIC_API_KEY 환경 변수가 설정되지 않았습니다.")
     st.stop()
 
+# Anthropic 클라이언트 초기화
+anthropic = Anthropic(api_key=ANTHROPIC_API_KEY)
+
+# 초기 탄소 크레딧 설정
+if 'carbon_credits' not in st.session_state:
+    st.session_state.carbon_credits = INITIAL_CARBON_CREDITS
+
+# AI 통합 사용 예
+def get_ai_recommendation(user_data):
+    response = anthropic.completions.create(
+        model=AI_MODEL,
+        prompt=f"사용자 데이터: {user_data}",
+        max_tokens_to_sample=MAX_TOKENS
+    )
+    return response.completion
 
 # 페이지 설정
 st.set_page_config(page_title="개인 탄소 발자국 거래 시스템", layout="wide")
