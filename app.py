@@ -100,15 +100,64 @@ def main():
 
     elif page == "탄소 크레딧 관리":
         st.title("탄소 크레딧 관리")
-        # (기존 코드 유지)
+        
+        st.subheader(f"현재 보유 크레딧: {st.session_state.carbon_credits:.2f} 톤")
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            buy_amount = st.number_input("구매할 크레딧 양 (톤)", min_value=0.0, max_value=10.0, step=0.1)
+            if st.button("크레딧 구매"):
+                st.session_state.carbon_credits += buy_amount
+                st.success(f"{buy_amount} 톤의 크레딧을 구매했습니다.")
+        
+        with col2:
+            sell_amount = st.number_input("판매할 크레딧 양 (톤)", min_value=0.0, max_value=st.session_state.carbon_credits, step=0.1)
+            if st.button("크레딧 판매"):
+                st.session_state.carbon_credits -= sell_amount
+                st.success(f"{sell_amount} 톤의 크레딧을 판매했습니다.")
 
     elif page == "마켓플레이스":
         st.title("탄소 크레딧 마켓플레이스")
-        # (기존 코드 유지)
+        
+        # 가상의 거래 데이터 생성
+        trades = pd.DataFrame({
+            'seller': ['User' + str(i) for i in range(1, 6)],
+            'amount': np.random.uniform(0.1, 2.0, 5).round(2),
+            'price': np.random.uniform(5000, 15000, 5).round(-2)
+        })
+        
+        st.table(trades)
+        
+        trade_amount = st.number_input("거래할 크레딧 양 (톤)", min_value=0.1, max_value=2.0, step=0.1)
+        trade_price = st.number_input("가격 (원/톤)", min_value=5000, max_value=15000, step=100)
+        
+        if st.button("거래 등록"):
+            st.success(f"{trade_amount} 톤의 크레딧을 {trade_price}원/톤에 등록했습니다.")
 
     elif page == "프로필":
         st.title("내 프로필")
-        # (기존 코드 유지)
+        
+        st.subheader("개인 정보")
+        st.write("이름: 홍길동")
+        st.write(f"연간 할당량: 4.0 톤")
+        st.write(f"현재 보유 크레딧: {st.session_state.carbon_credits:.2f} 톤")
+        
+        st.subheader("통계")
+        stats_data = pd.DataFrame({
+            'category': ['교통', '에너지', '식품', '기타'],
+            'amount': np.random.uniform(0.5, 1.5, 4)
+        })
+        fig = px.pie(stats_data, values='amount', names='category', title='카테고리별 탄소 발자국')
+        st.plotly_chart(fig)
+        
+        st.subheader("챌린지")
+        new_challenge = st.text_input("새로운 챌린지 추가")
+        if st.button("챌린지 등록"):
+            st.session_state.challenges.append(new_challenge)
+            st.success("새로운 챌린지가 등록되었습니다!")
+        
+        for idx, challenge in enumerate(st.session_state.challenges):
+            st.checkbox(challenge, key=f"challenge_{idx}")
 
     # AI 기반 예측 및 추천 (사이드바)
     st.sidebar.subheader("AI 추천")
