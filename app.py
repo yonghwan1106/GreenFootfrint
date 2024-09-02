@@ -1,3 +1,6 @@
+# 페이지 설정
+st.set_page_config(page_title="개인 탄소 발자국 거래 시스템", layout="wide")
+
 import os
 import streamlit as st
 import pandas as pd
@@ -10,6 +13,7 @@ from datetime import datetime, timedelta
 from ai_integration import get_ai_recommendation, analyze_carbon_trend
 from visualizations import (create_carbon_footprint_gauge, create_carbon_trend_chart,
                             create_category_breakdown, create_reduction_potential_chart)
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -45,8 +49,7 @@ def get_ai_recommendation(user_data):
         logger.error(f"Error in getting AI recommendation: {str(e)}")
         return None
 
-# 페이지 설정
-st.set_page_config(page_title="개인 탄소 발자국 거래 시스템", layout="wide")
+
 
 # 세션 상태 초기화 함수
 def initialize_session_state():
