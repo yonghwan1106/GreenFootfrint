@@ -5,11 +5,7 @@ import numpy as np
 import plotly.express as px
 from datetime import datetime, timedelta
 
-# Anthropic API 키 설정 (환경 변수에서 가져오기)
-ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY')
-if not ANTHROPIC_API_KEY:
-    st.error("ANTHROPIC_API_KEY 환경 변수가 설정되지 않았습니다.")
-    st.stop()
+
 
 # 새로운 import 문 추가
 try:
