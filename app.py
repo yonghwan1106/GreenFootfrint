@@ -11,10 +11,9 @@ from visualizations import (create_carbon_footprint_gauge, create_carbon_trend_c
                             create_category_breakdown, create_reduction_potential_chart)
 
 
-# Anthropic API 키 설정 (환경 변수에서 가져오기)
-ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY')
+# Anthropic API 키 확인
 if not ANTHROPIC_API_KEY:
-    st.error("ANTHROPIC_API_KEY 환경 변수가 설정되지 않았습니다.")
+    st.error("ANTHROPIC_API_KEY가 설정되지 않았습니다. config.py 파일을 확인해주세요.")
     st.stop()
 
 # Anthropic 클라이언트 초기화
@@ -27,9 +26,9 @@ if 'carbon_credits' not in st.session_state:
 # AI 통합 사용 예
 def get_ai_recommendation(user_data):
     response = anthropic.completions.create(
-        model=AI_MODEL,
+        model=claude_3.5_sonnet,
         prompt=f"사용자 데이터: {user_data}",
-        max_tokens_to_sample=MAX_TOKENS
+        max_tokens_to_sample=300
     )
     return response.completion
 
