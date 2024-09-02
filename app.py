@@ -1,8 +1,10 @@
 # 페이지 설정
-st.set_page_config(page_title="개인 탄소 발자국 거래 시스템", layout="wide")
 
 import os
 import streamlit as st
+
+st.set_page_config(page_title="개인 탄소 발자국 거래 시스템", layout="wide")
+
 import pandas as pd
 import numpy as np
 import plotly.express as px
