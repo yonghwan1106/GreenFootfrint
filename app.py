@@ -109,11 +109,11 @@ def main():
                 if recommendation:
                     st.write(recommendation)
                 else:
-                    st.error("AI 추천을 가져오지 못했습니다. 로그를 확인해주세요.")
+                    st.error("AI 추천을 가져오지 못했습니다. 반환된 값이 없습니다.")
             except Exception as e:
                 st.error(f"AI 추천 과정에서 오류가 발생했습니다: {str(e)}")
-                logger.exception("Detailed error in AI recommendation process")
-        
+                logger.exception("AI 추천 과정에서 상세 오류 발생")
+     
         # 카테고리별 분석
         category_data = pd.DataFrame([
             {'category': '교통', 'subcategory': '자동차', 'value': 2.5},
