@@ -1,8 +1,9 @@
 import os
 from anthropic import Anthropic, HUMAN_PROMPT, AI_PROMPT
+from config import ANTHROPIC_API_KEY, AI_MODEL, MAX_TOKENS
 
 # API 키 가져오기
-ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY')
+anthropic = Anthropic(api_key=ANTHROPIC_API_KEY)
 if not ANTHROPIC_API_KEY:
     raise ValueError("ANTHROPIC_API_KEY 환경 변수가 설정되지 않았습니다.")
 
