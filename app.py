@@ -26,7 +26,7 @@ if 'carbon_credits' not in st.session_state:
 # AI 통합 사용 예
 def get_ai_recommendation(user_data):
     response = anthropic.completions.create(
-        model=claude_3_5_sonnet,
+        model="claude-3-sonnet-20240229"
         prompt=f"사용자 데이터: {user_data}",
         max_tokens_to_sample=300
     )
