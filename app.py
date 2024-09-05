@@ -174,9 +174,6 @@ def main():
         if st.button("거래 등록"):
             st.success(f"{trade_amount} 톤의 크레딧을 {trade_price}원/톤에 등록했습니다.")
 
-    from anthropic import Anthropic
-
-# ... (기존 코드)
 
     elif page == "챗봇":
         st.title("탄소 발자국 챗봇")
