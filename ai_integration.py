@@ -7,6 +7,7 @@ anthropic = Anthropic(api_key=ANTHROPIC_API_KEY)
 if not ANTHROPIC_API_KEY:
     raise ValueError("ANTHROPIC_API_KEY 환경 변수가 설정되지 않았습니다.")
 
+anthropic = Anthropic(api_key=ANTHROPIC_API_KEY)
 
 def get_ai_recommendation(user_data):
     message = anthropic.messages.create(
