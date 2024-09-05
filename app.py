@@ -197,15 +197,21 @@ def main():
             with st.chat_message("assistant"):
                 message_placeholder = st.empty()
                 full_response = ""
-                for response in client.completions.create(
-                    prompt=f"{HUMAN_PROMPT} {prompt} {AI_PROMPT}",
-                    model=AI_MODEL,
-                    max_tokens_to_sample=1000,
-                    stream=True
-                ):
-                    full_response += (response.completion or "")
-                    message_placeholder.markdown(full_response + "▌")
-                message_placeholder.markdown(full_response)
+                try:
+                    for response in client.messages.create(
+                        model=AI_MODEL,
+                        max_tokens=1000,
+                        messages=[
+                            {"role": "user", "content": prompt}
+                        ],
+                        stream=True
+                    ):
+                        full_response += (response.content[0].text if response.content else "")
+                        message_placeholder.markdown(full_response + "▌")
+                    message_placeholder.markdown(full_response)
+                except Exception as e:
+                    st.error(f"API 호출 중 오류 발생: {str(e)}")
+                    logger.exception("상세 API 오류")
             st.session_state.messages.append({"role": "assistant", "content": full_response})
             
     elif page == "프로필":
