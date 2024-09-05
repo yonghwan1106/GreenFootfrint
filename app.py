@@ -1,17 +1,10 @@
 import os
 import streamlit as st
-
-# Streamlit Secrets에서 환경 변수로 API 키 설정
-os.environ['ANTHROPIC_API_KEY'] = st.secrets["ANTHROPIC_API_KEY"]
-
-# 페이지 설정
-st.set_page_config(page_title="개인 탄소 발자국 거래 시스템", layout="wide")
-
 import pandas as pd
 import numpy as np
 import plotly.express as px
 import logging
-from anthropic import Anthropic, HUMAN_PROMPT, AI_PROMPT
+from anthropic import Anthropic
 
 from config import ANTHROPIC_API_KEY, INITIAL_CARBON_CREDITS, AI_MODEL, MAX_TOKENS
 from datetime import datetime, timedelta
@@ -19,6 +12,11 @@ from ai_integration import get_ai_recommendation, analyze_carbon_trend
 from visualizations import (create_carbon_footprint_gauge, create_carbon_trend_chart,
                             create_category_breakdown, create_reduction_potential_chart)
 
+# Streamlit Secrets에서 환경 변수로 API 키 설정
+os.environ['ANTHROPIC_API_KEY'] = st.secrets["ANTHROPIC_API_KEY"]
+
+# 페이지 설정
+st.set_page_config(page_title="개인 탄소 발자국 거래 시스템", layout="wide")
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
