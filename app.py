@@ -198,16 +198,14 @@ def main():
                 message_placeholder = st.empty()
                 full_response = ""
                 try:
-                    for response in client.messages.create(
+                    response = client.messages.create(
                         model=AI_MODEL,
                         max_tokens=1000,
                         messages=[
                             {"role": "user", "content": prompt}
-                        ],
-                        stream=True
-                    ):
-                        full_response += (response.content[0].text if response.content else "")
-                        message_placeholder.markdown(full_response + "▌")
+                        ]
+                    )
+                    full_response = response.content
                     message_placeholder.markdown(full_response)
                 except Exception as e:
                     st.error(f"API 호출 중 오류 발생: {str(e)}")
