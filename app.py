@@ -174,38 +174,38 @@ def main():
         if st.button("거래 등록"):
             st.success(f"{trade_amount} 톤의 크레딧을 {trade_price}원/톤에 등록했습니다.")
 
+    from anthropic import Anthropic
+
+# ... (기존 코드)
+
     elif page == "챗봇":
         st.title("탄소 발자국 챗봇")
         
-        # 세션 상태 초기화
         if "messages" not in st.session_state:
             st.session_state.messages = []
 
-        # 채팅 기록 표시
         for message in st.session_state.messages:
             with st.chat_message(message["role"]):
                 st.markdown(message["content"])
 
-        # 사용자 입력
         if prompt := st.chat_input("무엇이 궁금하신가요?"):
             st.session_state.messages.append({"role": "user", "content": prompt})
             with st.chat_message("user"):
                 st.markdown(prompt)
 
-            # Claude API를 사용하여 응답 생성
             client = Anthropic(api_key=ANTHROPIC_API_KEY)
             with st.chat_message("assistant"):
                 message_placeholder = st.empty()
                 full_response = ""
                 try:
-                    response = client.messages.create(
+                    message = client.messages.create(
                         model=AI_MODEL,
-                        max_tokens=1000,
+                        max_tokens=MAX_TOKENS,
                         messages=[
                             {"role": "user", "content": prompt}
                         ]
                     )
-                    full_response = response.content
+                    full_response = message.content
                     message_placeholder.markdown(full_response)
                 except Exception as e:
                     st.error(f"API 호출 중 오류 발생: {str(e)}")
