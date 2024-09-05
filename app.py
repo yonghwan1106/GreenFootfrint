@@ -1,7 +1,6 @@
 import os
 import streamlit as st
 
-
 # Streamlit Secrets에서 환경 변수로 API 키 설정
 os.environ['ANTHROPIC_API_KEY'] = st.secrets["ANTHROPIC_API_KEY"]
 
@@ -78,7 +77,8 @@ def main():
     initialize_session_state()
 
     # 사이드바 - 네비게이션
-    page = st.sidebar.selectbox("페이지 선택", ["홈", "탄소 크레딧 관리", "마켓플레이스", "프로필"])
+    page = st.sidebar.selectbox("페이지 선택", ["홈", "탄소 크레딧 관리", "마켓플레이스", "프로필", "챗봇"])
+
 
     if page == "홈":
         st.title("내 탄소 발자국")
@@ -174,6 +174,40 @@ def main():
         if st.button("거래 등록"):
             st.success(f"{trade_amount} 톤의 크레딧을 {trade_price}원/톤에 등록했습니다.")
 
+    elif page == "챗봇":
+        st.title("탄소 발자국 챗봇")
+        
+        # 세션 상태 초기화
+        if "messages" not in st.session_state:
+            st.session_state.messages = []
+
+        # 채팅 기록 표시
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
+
+        # 사용자 입력
+        if prompt := st.chat_input("무엇이 궁금하신가요?"):
+            st.session_state.messages.append({"role": "user", "content": prompt})
+            with st.chat_message("user"):
+                st.markdown(prompt)
+
+            # Claude API를 사용하여 응답 생성
+            client = Anthropic(api_key=ANTHROPIC_API_KEY)
+            with st.chat_message("assistant"):
+                message_placeholder = st.empty()
+                full_response = ""
+                for response in client.completions.create(
+                    prompt=f"{HUMAN_PROMPT} {prompt} {AI_PROMPT}",
+                    model=AI_MODEL,
+                    max_tokens_to_sample=1000,
+                    stream=True
+                ):
+                    full_response += (response.completion or "")
+                    message_placeholder.markdown(full_response + "▌")
+                message_placeholder.markdown(full_response)
+            st.session_state.messages.append({"role": "assistant", "content": full_response})
+            
     elif page == "프로필":
         st.title("내 프로필")
         
